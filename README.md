@@ -16,7 +16,7 @@
 
 <p align="center">
     <br>
-    <img src="https://raw.githubusercontent.com/Ryujinx/Ryujinx-Website/master/public/assets/images/shell.png">
+    <img src="https://raw.githubusercontent.com/Shim06/Anemoia/main/assets/preview.png">
 </p>
 
 ## Compatibility
