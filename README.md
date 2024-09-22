@@ -39,7 +39,7 @@ If you wish to build the emulator yourself, follow these steps:
 Either use `git clone https://github.com/Shim06/Anemoia.git` on the command line to clone the repository or use Code --> Download zip button to get the files.
 
 ### Step 2
-Open `Raycasting Engine.sln` with Visual Studio and configure the project. Under Configuration Properties, ensure the correct Configuration (Debug or Release) and Platform (x64 or Win32) are selected.
+Open `Anemoia.sln` with Visual Studio and configure the project. Under Configuration Properties, ensure the correct Configuration (Debug or Release) and Platform (x64 or Win32) are selected.
 
 ### Step 3
 To Build the Project in Visual Studio, select Build from the menu. Click Build Solution or press `Ctrl+Shift+B` to start the build process.
