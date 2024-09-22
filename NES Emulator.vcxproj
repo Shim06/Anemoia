@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{07d3d59f-51ff-4416-9304-d610a4e84a80}</ProjectGuid>
+    <RootNamespace>NESEmulator</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Anemoia</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>.\src;.\src\NES Core;.\src\NES Core\Mappers;.\include\CRCpp\inc;.\include\imgui;.\include\imgui\backends;.\include\pugixml-1.14\src;.\include\SDL2_image-2.8.2\include;.\include\SDL2-2.28.5\include</IncludePath>
+    <LibraryPath>.\include\SDL2-2.28.5\lib\x86;.\include\SDL2_image-2.8.2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\Intermediate\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>.\src;.\src\NES Core;.\src\NES Core\Mappers;.\include\SDL2-2.28.5\include;.\include\SDL2_image-2.8.2\include;.\include\pugixml-1.14\src;.\include\imgui;.\include\imgui\backends;.\include\CRCpp\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>NES Emulator\include\SDL2_image-2.8.2\lib\x86;NES Emulator\include\SDL2-2.28.5\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\Intermediate\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>.\include\SDL2-2.28.5\include;.\include\SDL2_image-2.8.2\include;.\include\pugixml-1.14\src;.\include\imgui;.\include\imgui\backends;.\include\CRCpp\inc;.\src;.\src\NES Core;.\src\NES Core\Mappers;$(IncludePath)</IncludePath>
+    <LibraryPath>.\include\SDL2-2.28.5\lib\x64;.\include\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\Intermediate\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>.\include\SDL2-2.28.5\include;.\include\SDL2_image-2.8.2\include;.\include\pugixml-1.14\src;.\include\imgui;.\include\imgui\backends;.\include\CRCpp\inc;.\src;.\src\NES Core;.\src\NES Core\Mappers;$(IncludePath)</IncludePath>
+    <LibraryPath>.\include\SDL2-2.28.5\lib\x64;.\include\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\Intermediate\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\NES Core;..\..\src\NES Core\Mappers;..\..\include\SDL2-2.28.5\include;..\..\include\SDL2_image-2.8.2\include;..\..\include\pugixml-1.14\src;..\..\include\imgui;..\..\include\imgui\backends;..\..\include\CRCpp\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\include\SDL2-2.28.5\lib\x86;..\..\include\SDL2_image-2.8.2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\..\include\SDL2-2.28.5\include;..\..\include\SDL2_image-2.8.2\include;..\..\include\pugixml-1.14\src;..\..\include\imgui;..\..\include\imgui\backends;..\..\include\CRCpp\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\include\SDL2-2.28.5\lib\x86;.\include\SDL2_image-2.8.2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\NES Core;..\..\src\NES Core\Mappers;..\..\include\SDL2-2.28.5\include;..\..\include\SDL2_image-2.8.2\include;..\..\include\pugixml-1.14\src;..\..\include\imgui;..\..\include\imgui\backends;..\..\include\CRCpp\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;Comdlg32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\include\SDL2-2.28.5\lib\x64;..\..\include\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\NES Core;..\..\src\NES Core\Mappers;..\..\include\SDL2-2.28.5\include;..\..\include\SDL2_image-2.8.2\include;..\..\include\pugixml-1.14\src;..\..\include\imgui;..\..\include\imgui\backends;..\..\include\CRCpp\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;Comdlg32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\include\SDL2-2.28.5\lib\x64;..\..\include\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Emulator.h" />
+    <ClInclude Include="src\json.hpp" />
+    <ClInclude Include="src\Keybinds.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\NES Core\apu2A03.h" />
+    <ClInclude Include="src\NES Core\Bus.h" />
+    <ClInclude Include="src\NES Core\Cartridge.h" />
+    <ClInclude Include="src\NES Core\cpu6502.h" />
+    <ClInclude Include="src\NES Core\Mapper.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_000.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_001.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_002.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_003.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_004.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_007.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_011.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_018.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_033.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_048.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_066.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_185.h" />
+    <ClInclude Include="src\NES Core\Mappers\Mapper_206.h" />
+    <ClInclude Include="src\NES Core\ppu2C02.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\resource1.h" />
+    <ClInclude Include="src\Timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdlrenderer2.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="include\pugixml-1.14\src\pugixml.cpp" />
+    <ClCompile Include="src\Emulator.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\NES Core\apu2A03.cpp" />
+    <ClCompile Include="src\NES Core\Bus.cpp" />
+    <ClCompile Include="src\NES Core\Cartridge.cpp" />
+    <ClCompile Include="src\NES Core\cpu6502.cpp" />
+    <ClCompile Include="src\NES Core\Mapper.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_000.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_001.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_002.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_003.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_004.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_007.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_011.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_018.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_033.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_048.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_066.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_185.cpp" />
+    <ClCompile Include="src\NES Core\Mappers\Mapper_206.cpp" />
+    <ClCompile Include="src\NES Core\ppu2C02.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Anemoia.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Anemoia.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

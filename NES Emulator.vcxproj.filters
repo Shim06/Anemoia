@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\NES Core">
+      <UniqueIdentifier>{7219064a-019f-4458-ae74-14e1a314ae8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NES Core">
+      <UniqueIdentifier>{1231011c-bbcd-4fe9-b78c-b6d94856042b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NES Core\Mappers">
+      <UniqueIdentifier>{65efe5b2-0dac-48af-b939-b5937cdca7e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\NES Core\Mappers">
+      <UniqueIdentifier>{58a9069d-cdf6-4dcf-9e34-81900c77247c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{79be5465-9e02-465b-83b7-1eb66e10908a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Emulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Keybinds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\apu2A03.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Bus.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Cartridge.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\cpu6502.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mapper.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\ppu2C02.h">
+      <Filter>Header Files\NES Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource1.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_000.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_001.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_002.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_003.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_004.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_007.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_011.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_018.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_033.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_048.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_066.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_185.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NES Core\Mappers\Mapper_206.h">
+      <Filter>Header Files\NES Core\Mappers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Emulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_206.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_000.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_001.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_002.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_003.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_004.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_007.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_011.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_018.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_033.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_048.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_066.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mappers\Mapper_185.cpp">
+      <Filter>Source Files\NES Core\Mappers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\apu2A03.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Bus.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Cartridge.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\cpu6502.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\Mapper.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NES Core\ppu2C02.cpp">
+      <Filter>Source Files\NES Core</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_draw.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\pugixml-1.14\src\pugixml.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_widgets.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdlrenderer2.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_tables.cpp">
+      <Filter>Include</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Anemoia.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Anemoia.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
