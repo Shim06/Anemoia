@@ -29,6 +29,7 @@ Anyone is free to open an issue if a bug or error is found within a game.
 1. Download the latest zip file from the releases section.
 2. Extract the contents.
 3. Run `Anemoia.exe` to start the program.
+4. Put .nes game roms inside the `/games` folder.
 
 ## How to build
 
