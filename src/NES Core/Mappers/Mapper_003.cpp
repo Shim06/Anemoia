@@ -50,3 +50,19 @@ void Mapper_003::reset()
 {
 	ptr_CHR_bank = 0x00;
 }
+
+void Mapper_003::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	ptr_CHR_bank = dump[index++];
+}
+
+std::vector<uint8_t>& Mapper_003::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(ptr_CHR_bank);
+	return dump;
+}

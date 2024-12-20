@@ -7,7 +7,7 @@ class Bus;
 
 class cpu6502
 {
-public: 
+public:
 	cpu6502();
 	~cpu6502();
 
@@ -25,7 +25,8 @@ public:
 	};
 
 	void connectBus(Bus* n) { bus = n; }
-
+	std::vector<uint16_t>& dumpState();
+	void loadState(const std::vector<uint16_t>& dump);
 
 	// Registers 
 	uint8_t A = 0x00; // Accumulator
@@ -94,5 +95,4 @@ private:
 	};
 
 	std::vector<OPCODE> lookup;
-
 };

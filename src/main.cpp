@@ -1,5 +1,6 @@
 #include "main.h"
 
+#define anemoia_version "Version: 1.1.0"
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
@@ -13,6 +14,13 @@ int main(int, char**)
         MessageBox(NULL, L"Program does not have read/write permissions!", L"ERROR", MB_ICONERROR | MB_OK);
         return 1;
     }
+
+    // Ensure necessary folders exist
+    ensureFolderPathExists(current_directory + "games");
+    ensureFolderPathExists(current_directory + "saves");
+    ensureFolderPathExists(current_directory + "screenshots");
+    ensureFolderPathExists(current_directory + "system");
+    ensureFolderPathExists(current_directory + "states");
 
     // Get .nes files in games directory
     ensureFolderPathExists(current_directory + "games");
@@ -97,7 +105,7 @@ int main(int, char**)
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
         return -1;
     }
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //| SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);// || SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr)
     {
         SDL_Log("Error creating SDL_Renderer!");
@@ -130,6 +138,7 @@ int main(int, char**)
     font_cfg.GlyphExtraSpacing.x = 0.0f;
     font_cfg.RasterizerDensity = 3.0f;
     io.Fonts->AddFontFromFileTTF((current_directory + "fonts\\roboto\\roboto-regular.ttf").c_str(), 16.0f * 1.5f, &font_cfg);
+    ImFont* font_size_24 = io.Fonts->AddFontFromFileTTF((current_directory + "fonts\\roboto\\roboto-regular.ttf").c_str(), 24.0f * 1.5f, &font_cfg);
     ImFont* bold_font = io.Fonts->AddFontFromFileTTF((current_directory + "fonts\\roboto\\roboto-bold.ttf").c_str(), 18.0f * 1.5f, &font_cfg);
 
     for (wchar_t i = 0x2150; i <= 0x218F; i++) // UTF-8 Number Forms
@@ -231,7 +240,6 @@ int main(int, char**)
                 {
                     toggleFullscreen(window);
                 }
-
                 else if (show_settings_window || !emulator_running) break;
 
 
@@ -243,6 +251,8 @@ int main(int, char**)
                         saveImage(("screenshots\\Screenshot (" + std::to_string(settings.screenshot_number) + ").png").c_str(),
                             renderer, emulator.ptr_frame_buffer);
                     }
+                    emulator_text = "Screenshot (" + std::to_string(settings.screenshot_number - 1) + ").png saved!";
+                    show_text = true;
                 }
 
                 else if (event.key.keysym.sym == settings.keyboard_hotkeys.pause)
@@ -254,8 +264,8 @@ int main(int, char**)
                 else if (event.key.keysym.sym == settings.keyboard_hotkeys.reset)
                     emulator.reset();
 
-                else if (event.key.keysym.sym == settings.keyboard_hotkeys.show_UI)
-                    settings.hide_UI = false;
+                else if (event.key.keysym.sym == settings.keyboard_hotkeys.toggle_UI)
+                    settings.hide_UI = !settings.hide_UI;
 
                 else if (event.key.keysym.sym == settings.keyboard_hotkeys.mute)
                     emulator.toggleMute();
@@ -265,6 +275,30 @@ int main(int, char**)
 
                 else if (event.key.keysym.sym == settings.keyboard_hotkeys.toggle_fast_forward)
                     settings.toggle_fast_forward = !settings.toggle_fast_forward;
+
+                else if (event.key.keysym.sym == settings.keyboard_hotkeys.quick_save_state)
+                {
+                    ensureFolderPathExists(current_directory + "states");
+                    std::string file = "states\\" + game_CRC32 + ".state";
+                    if (emulator.saveState(file, game_CRC32))
+                        emulator_text = "State saved!";
+                    else
+                        emulator_text = "Failed to save state!";
+                    show_text = true;
+                    text_timer = 0.0f;
+                }
+
+                else if (event.key.keysym.sym == settings.keyboard_hotkeys.quick_load_state)
+                {
+                    ensureFolderPathExists(current_directory + "states");
+                    std::string file = "states\\" + game_CRC32 + ".state";
+                    if (emulator.loadState(file, game_CRC32))
+                        emulator_text = "State loaded!";
+                    else
+                        emulator_text = "Failed to load state!";
+                    show_text = true;
+                    text_timer = 0.0f;
+                }
 
                 else if (event.key.keysym.sym == settings.keyboard.A)
                     emulator.setController1State(Emulator::controllerControls::A, true);
@@ -422,7 +456,6 @@ int main(int, char**)
 
         if (settings.open_file)
         {
-
             settings.open_file = false;
             SDL_SysWMinfo info;
             SDL_VERSION(&info.version);
@@ -434,16 +467,21 @@ int main(int, char**)
                 {
                     if (!settings.skip_metadata)
                     {
-                        std::string folder_path = current_directory + "system\\games\\" + games[current_game_index].CRC32 + "\\";
-                        emulator.dumpSave(current_directory + "saves\\" + games[current_game_index].CRC32 + ".sav");
+                        ensureFolderPathExists(current_directory + "saves");
+                        std::string folder_path = current_directory + "system\\games\\" + game_CRC32 + "\\";
+                        emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
                         updatePlayTime(folder_path, emulator.getElapsedTime());
                         updateLastPlayedTime(folder_path, games[current_game_index]);
                     }
                     else
+                    {
+                        ensureFolderPathExists(current_directory + "saves");
                         emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
+                    }
                 }
 
                 emulator_running = true;
+                action_disabled = false;
                 settings.skip_metadata = true;
                 game_CRC32 = computeCRC32(rom_path);
                 if (emulator.start(rom_path, renderer) == 1)
@@ -498,6 +536,44 @@ int main(int, char**)
 
                 ImGui::Separator();
 
+                // Save states
+                if (ImGui::MenuItem("Save State", NULL, nullptr, emulator_running))
+                {
+                    SDL_SysWMinfo info;
+                    SDL_VERSION(&info.version);
+                    SDL_GetWindowWMInfo(window, &info);
+                    std::string path = saveState(info.info.win.window);
+                    if (path != "")
+                    {
+                        ensureFolderPathExists(current_directory + "states");
+                        if (emulator.saveState(path, game_CRC32))
+                            emulator_text = "State saved!";
+                        else
+                            emulator_text = "Failed to save state!";
+                        show_text = true;
+                        text_timer = 0.0f;
+                    }
+                }
+                if (ImGui::MenuItem("Load State", NULL, nullptr, emulator_running))
+                {
+                    SDL_SysWMinfo info;
+                    SDL_VERSION(&info.version);
+                    SDL_GetWindowWMInfo(window, &info);
+                    std::string path = loadState(info.info.win.window);
+                    if (path != "")
+                    {
+                        ensureFolderPathExists(current_directory + "states");
+                        if (emulator.loadState(path, game_CRC32))
+                            emulator_text = "State loaded!";
+                        else
+                            emulator_text = "Failed to load state!";
+                        show_text = true;
+                        text_timer = 0.0f;
+                    }
+                }
+
+                ImGui::Separator();
+
                 // Open game folder button
                 if (ImGui::MenuItem("Open Game Folder"))
                 {
@@ -541,8 +617,7 @@ int main(int, char**)
             }
 
             // Actions menu
-            if (action_disabled)
-                ImGui::BeginDisabled();
+            if (action_disabled) ImGui::BeginDisabled();
             if (ImGui::BeginMenu("Actions"))
             {
 
@@ -571,16 +646,14 @@ int main(int, char**)
                 if (ImGui::MenuItem("Stop Emulation"))
                 {
                     emulator_running = false;
-                    if (!settings.skip_metadata)
-                        emulator.dumpSave(current_directory + "saves\\" + games[current_game_index].CRC32 + ".sav");
-                    else
-                        emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
+                    ensureFolderPathExists(current_directory + "saves");
+                    emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
                     emulator.stop();
 
                     if (!settings.skip_metadata)
                     {
                         // Save game preview
-                        std::string folder_path = current_directory + "system\\games\\" + games[current_game_index].CRC32 + "\\";
+                        std::string folder_path = current_directory + "system\\games\\" + game_CRC32 + "\\";
                         savePreview(folder_path, emulator);
                         updateLastPlayedTime(folder_path, games[current_game_index]);
 
@@ -609,6 +682,31 @@ int main(int, char**)
                 }
                 ImGui::Separator();
 
+                if (ImGui::MenuItem("Quick Save State"))
+                {
+                    ensureFolderPathExists(current_directory + "states");
+                    std::string file = "states\\" + game_CRC32 + ".state";
+                    if (emulator.saveState(file, game_CRC32))
+                        emulator_text = "State saved!";
+                    else
+                        emulator_text = "Failed to save state!";
+                    show_text = true;
+                    text_timer = 0.0f;
+                }
+
+                if (ImGui::MenuItem("Quick Load State"))
+                {
+                    ensureFolderPathExists(current_directory + "states");
+                    std::string file = "states\\" + game_CRC32 + ".state";
+                    if (emulator.loadState(file, game_CRC32))
+                        emulator_text = "State loaded!";
+                    else
+                        emulator_text = "Failed to load state!";
+                    show_text = true;
+                    text_timer = 0.0f;
+                }
+
+                ImGui::Separator();
                 if (ImGui::MenuItem("Toggle Mute", keyboard_keybinds[static_cast<SDL_KeyCode>(settings.keyboard_hotkeys.mute)].c_str()))
                 {
                     emulator.toggleMute();
@@ -622,11 +720,13 @@ int main(int, char**)
                         saveImage(("screenshots\\Screenshot (" + std::to_string(settings.screenshot_number) + ").png").c_str(),
                                     renderer, emulator.ptr_frame_buffer);
                     }
+                    emulator_text = "Screenshot (" + std::to_string(settings.screenshot_number - 1) + ").png saved!";
+                    show_text = true;
                 }
                
-                if (ImGui::MenuItem("Hide UI", keyboard_keybinds[static_cast<SDL_KeyCode>(settings.keyboard_hotkeys.show_UI)].c_str()))
+                if (ImGui::MenuItem("Hide UI", keyboard_keybinds[static_cast<SDL_KeyCode>(settings.keyboard_hotkeys.toggle_UI)].c_str()))
                 {
-                    settings.hide_UI = true;
+                    settings.hide_UI = !settings.hide_UI;
                 }
                 ImGui::EndMenu();
             }
@@ -665,18 +765,18 @@ int main(int, char**)
             if (ImGui::BeginViewportSideBar("##MainStatusBar", viewport, ImGuiDir_Down, height, window_flags)) {
                 if (ImGui::BeginMenuBar()) {
 
-                    // IMGUI FPS -> ImGui::Text("%.2f FPS (%.2f ms)", io.Framerate, 1000.0f / io.Framerate);
+                    // ImGui::Text("%.2f FPS (%.2f ms)", io.Framerate, 1000.0f / io.Framerate);
                     if (emulator_running)
                     {
                         double emulator_fps = emulator.getAvgFPS();
                         ImGui::Text("%.2f FPS (%.2f ms)", emulator_fps, 1000.0f / emulator_fps);
                     }
 
-                    const char* text = "Version: 1.0.0";
+                    const char* text = anemoia_version;
                     ImVec2 text_size = ImGui::CalcTextSize(text);
 
                     // Position the text on the right side
-                    ImVec2 text_pos = ImVec2(ImGui::GetWindowWidth() - text_size.x - 10.0f, ImGui::GetCursorPosY());
+                    ImVec2 text_pos = ImVec2(ImGui::GetWindowWidth() - text_size.x - 15.0f, ImGui::GetCursorPosY());
                     ImGui::SetCursorPos(text_pos);
                     ImGui::Text(text);
                     ImGui::EndMenuBar();
@@ -690,6 +790,16 @@ int main(int, char**)
         // Games list
         if (!emulator_running)
         {
+            if (games_list.size() == 0)
+            {
+                std::string text = "Add ROMs to the \"games\" folder to start.";
+                ImVec2 text_size = ImGui::CalcTextSize(text.c_str());
+                ImVec2 text_pos = ImVec2((io.DisplaySize.x - text_size.x) * 0.5f, (io.DisplaySize.y - text_size.y) * 0.5f);
+
+                ImGui::SetCursorPos(text_pos);
+                ImGui::Text(text.c_str());
+            }
+
             float table_width = ImGui::GetContentRegionAvail().x;
             ImGuiTableFlags table_flags = ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_NoPadInnerX | ImGuiTableFlags_NoPadOuterX;
             if (ImGui::BeginTable("Games", 1, table_flags))
@@ -700,12 +810,13 @@ int main(int, char**)
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
                 ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 4.0f));
                 ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+
                 for (int i = 0, size = static_cast<int>(games_list.size()); i < size; i++)
                 {
                     const char* game_title = games[i].name.c_str();
                     const char* game_alt_name = games[i].alt_name.c_str();
                     const char* game_publisher = games[i].publisher.c_str();
-                    const char* game_CRC32 = games[i].CRC32.c_str();
+                    const char* cur_game_CRC32 = games[i].CRC32.c_str();
                     const char* game_system = games[i].system.c_str();
                     const char* time_played = games[i].time_played.c_str();
                     const char* last_played_date = games[i].last_played_date.c_str();
@@ -723,6 +834,7 @@ int main(int, char**)
                         settings.skip_metadata = false;
                         game_path = (current_directory + "games\\" + games_list[i] + ".nes");
                         current_game_index = i;
+                        game_CRC32 = games[i].CRC32;
                         if (settings.start_games_fullscreen)
                         {
                             settings.hide_UI = true;
@@ -794,7 +906,7 @@ int main(int, char**)
                     // Game CRC32 
                     draw_list->AddText(ImVec2(button_pos.x + (button_size.x * 1.0f) - padding2 + (13.08f * 1.5f),
                                        button_pos.y + (button_size.y * 0.135f)),
-                                       color, game_CRC32);
+                                       color, cur_game_CRC32);
                     // Game system
                     draw_list->AddText(ImVec2(button_pos.x + (button_size.x * 1.0f) - padding2 + (13.08f * 1.5f),
                                        button_pos.y + (button_size.y * 0.34f)),
@@ -846,7 +958,7 @@ int main(int, char**)
                 }
                 else
                 {
-                    emulator.loadSave(current_directory + "saves\\" + games[current_game_index].CRC32 + ".sav");
+                    emulator.loadSave(current_directory + "saves\\" + game_CRC32 + ".sav");
                     setVolume(emulator);
 
                     // To Do: Seperate threads for emulation and GUI
@@ -882,6 +994,25 @@ int main(int, char**)
 
 
                 ImGui::Image((void*)emulator.getFrame(), ImVec2(scaled_width, scaled_height));
+            }
+
+            if (show_text)
+            {
+                ImGui::PushFont(font_size_24);
+                ImVec2 text_size = ImGui::CalcTextSize(emulator_text.c_str());
+                float height = settings.hide_UI ? (io.DisplaySize.y - text_size.y) * 0.98f : ((io.DisplaySize.y - (ImGui::GetFrameHeight() * 1.7f)) - text_size.y);
+                ImVec2 text_pos = ImVec2(15.0f, height);
+                
+                ImGui::SetCursorPos(text_pos);
+                ImGui::Text(emulator_text.c_str());
+
+                text_timer += ImGui::GetIO().DeltaTime;
+                if (text_timer >= 2.0f)
+                {
+                    text_timer = 0.0f;
+                    show_text = false;
+                }
+                ImGui::PopFont();
             }
 
             ImGui::End();
@@ -972,7 +1103,8 @@ int main(int, char**)
 
                     // Hotkeys
                     static const std::string text[] =
-                    { "Fast Forward:", "Toggle Fast Forward:", "Reset:", "Screenshot:", "Enter Fullscreen:", "Show UI:", "Pause:", "Mute:" };
+                    { "Fast Forward:", "Toggle Fast Forward:", "Reset:", "Screenshot:", "Enter Fullscreen:", "Toggle UI:", "Pause:", "Mute:",
+                      "Quick Save State", "Quick Load State" };
                     std::string key[] =
                     { 
                         keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.fast_forward)],
@@ -980,12 +1112,15 @@ int main(int, char**)
                         keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.reset)],
                         keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.screenshot)],
                         keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.toggle_fullscreen)],
-                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.show_UI)],
+                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.toggle_UI)],
                         keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.pause)],
-                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.mute)]
+                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.mute)],
+                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.quick_save_state)],
+                        keyboard_keybinds[static_cast<SDL_KeyCode>(temp_settings.keyboard_hotkeys.quick_load_state)]
                     };
                     static constexpr int hotkey[] =
-                    { KEY_FAST_FORWARD, KEY_TOGGLE_FAST_FORWARD, KEY_RESET, KEY_SCREENSHOT, KEY_TOGGLE_FULLSCREEN, KEY_SHOW_UI, KEY_PAUSE, KEY_MUTE };
+                    { KEY_FAST_FORWARD, KEY_TOGGLE_FAST_FORWARD, KEY_RESET, KEY_SCREENSHOT, KEY_TOGGLE_FULLSCREEN, KEY_TOGGLE_UI, KEY_PAUSE, KEY_MUTE, 
+                      KEY_QUICK_SAVE_STATE, KEY_QUICK_LOAD_STATE };
 
 
                     // Keybinds
@@ -1236,12 +1371,13 @@ int main(int, char**)
         SDL_RenderPresent(renderer);
 
     }
-    std::string folder_path = current_directory + "system\\games\\" + games[current_game_index].CRC32 + "\\";
+    std::string folder_path = current_directory + "system\\games\\" + game_CRC32 + "\\";
     if (emulator_running)
     {
         if (!settings.skip_metadata)
         {
-            emulator.dumpSave(current_directory + "saves\\" + games[current_game_index].CRC32 + ".sav");
+            ensureFolderPathExists(current_directory + "saves");
+            emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
             emulator.stop();
             updatePlayTime(folder_path, emulator.getElapsedTime());
             updateLastPlayedTime(folder_path, games[current_game_index]);
@@ -1249,6 +1385,7 @@ int main(int, char**)
         else
         {
             emulator.stop();
+            ensureFolderPathExists(current_directory + "saves");
             emulator.dumpSave(current_directory + "saves\\" + game_CRC32 + ".sav");
         }
     }
@@ -1306,11 +1443,13 @@ void saveSettings()
     settings_json["fast_forward"] = settings.keyboard_hotkeys.fast_forward;
     settings_json["toggle_fast_forward"] = settings.keyboard_hotkeys.toggle_fast_forward;
     settings_json["screenshot"] = settings.keyboard_hotkeys.screenshot;
-    settings_json["show_UI"] = settings.keyboard_hotkeys.show_UI;
+    settings_json["toggle_UI"] = settings.keyboard_hotkeys.toggle_UI;
     settings_json["pause"] = settings.keyboard_hotkeys.pause;
     settings_json["mute"] = settings.keyboard_hotkeys.mute;
     settings_json["toggle_fullscreen"] = settings.keyboard_hotkeys.toggle_fullscreen;
     settings_json["reset"] = settings.keyboard_hotkeys.reset;
+    settings_json["quick_save_state"] = settings.keyboard_hotkeys.quick_save_state;
+    settings_json["quick_load_state"] = settings.keyboard_hotkeys.quick_load_state;
 
     std::ofstream file_stream(current_directory + "system\\settings.json");
     file_stream << std::setw(4) << settings_json << std::endl;
@@ -1354,11 +1493,13 @@ void loadSettings(const std::string& file_path)
         settings["fast_forward"] = SDLK_LSHIFT;
         settings["toggle_fast_forward"] = SDLK_F1;
         settings["screenshot"] = SDLK_F8;
-        settings["show_UI"] = SDLK_F4;
+        settings["toggle_UI"] = SDLK_F4;
         settings["pause"] = SDLK_F5;
         settings["mute"] = SDLK_F2;
         settings["toggle_fullscreen"] = SDLK_F11;
         settings["reset"] = SDLK_t;
+        settings["quick_save_state"] = SDLK_l;
+        settings["quick_load_state"] = SDLK_p;
 
         std::ofstream newsettingsFile("system\\settings.json");
         newsettingsFile << std::setw(4) << settings;
@@ -1401,11 +1542,13 @@ void loadSettings(const std::string& file_path)
     settings.keyboard_hotkeys.fast_forward = settings_json["fast_forward"];
     settings.keyboard_hotkeys.toggle_fast_forward = settings_json["toggle_fast_forward"];
     settings.keyboard_hotkeys.screenshot = settings_json["screenshot"];
-    settings.keyboard_hotkeys.show_UI = settings_json["show_UI"];
+    settings.keyboard_hotkeys.toggle_UI = settings_json["toggle_UI"];
     settings.keyboard_hotkeys.pause = settings_json["pause"];
     settings.keyboard_hotkeys.mute = settings_json["mute"];
     settings.keyboard_hotkeys.toggle_fullscreen = settings_json["toggle_fullscreen"];
     settings.keyboard_hotkeys.reset = settings_json["reset"];
+    settings.keyboard_hotkeys.quick_save_state = settings_json["quick_save_state"];
+    settings.keyboard_hotkeys.quick_load_state = settings_json["quick_load_state"];
 
     temp_settings = settings;
 }
@@ -1475,8 +1618,8 @@ void handleKeybindRemap(int type)
             temp_settings.keyboard_hotkeys.screenshot = key_pressed;
             break;
 
-        case KEY_SHOW_UI:
-            temp_settings.keyboard_hotkeys.show_UI = key_pressed;
+        case KEY_TOGGLE_UI:
+            temp_settings.keyboard_hotkeys.toggle_UI = key_pressed;
             break;
 
         case KEY_PAUSE:
@@ -1493,6 +1636,14 @@ void handleKeybindRemap(int type)
 
         case KEY_RESET:
             temp_settings.keyboard_hotkeys.reset = key_pressed;
+            break;
+
+        case KEY_QUICK_SAVE_STATE:
+            temp_settings.keyboard_hotkeys.quick_save_state = key_pressed;
+            break;
+
+        case KEY_QUICK_LOAD_STATE:
+            temp_settings.keyboard_hotkeys.quick_load_state = key_pressed;
             break;
         }
         selected_keybind = 0xFFFF;
@@ -1614,6 +1765,45 @@ std::string loadROM(HWND hwnd)
         return ofn.lpstrFile;
     }
 
+    return std::string();
+}
+
+std::string saveState(HWND hwnd)
+{
+    OPENFILENAMEA ofn;
+    CHAR szFile[260] = { 0 };
+    ZeroMemory(&ofn, sizeof(OPENFILENAME));
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = hwnd;
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = sizeof(szFile);
+    ofn.lpstrFilter = "State Files (*.state)\0*.state\0";
+    ofn.lpstrDefExt = "sav";
+    ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+    if (GetSaveFileNameA(&ofn) == TRUE)
+    {
+        return ofn.lpstrFile;
+    }
+    return std::string();
+}
+
+std::string loadState(HWND hwnd)
+{
+    OPENFILENAMEA ofn;
+    CHAR szFile[260] = { 0 };
+    ZeroMemory(&ofn, sizeof(OPENFILENAME));
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = hwnd;
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = sizeof(szFile);
+    ofn.lpstrFilter = "State Files (*.state)\0*.state\0";
+    ofn.nFilterIndex = 1;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+    if (GetOpenFileNameA(&ofn) == TRUE)
+    {
+        return ofn.lpstrFile;
+    }   
     return std::string();
 }
 

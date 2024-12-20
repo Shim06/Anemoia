@@ -385,6 +385,24 @@ void apu2A03::reset()
 	DMC.output_unit.silence_flag = true;
 }
 
+void apu2A03::resetChannels()
+{
+	pulse1.len_counter.timer = 0;
+	pulse2.len_counter.timer = 0;
+	triangle.len_counter.timer = 0;
+	noise.len_counter.timer = 0;
+
+	DMC.output_unit.output_level = 0;
+	DMC.output_unit.remaining_bits = 0;
+	DMC.output_unit.shift_register = 0;
+	DMC.memory_reader.address = 0;
+	DMC.memory_reader.remaining_bytes = 0;
+	DMC.timer = 0;
+	DMC.sample_address = 0;
+	DMC.sample_buffer = 0;
+	DMC.sample_length = 0;
+}
+
 void apu2A03::toggleMute()
 {
 	mute = !mute;

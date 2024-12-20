@@ -14,6 +14,9 @@ public:
 
 	void reset() override;
 
+	void loadState(const std::vector<uint8_t>& dump) override;
+	std::vector<uint8_t>& dumpState() override;
+
 private:
 	uint8_t bank_select = 0x00; // Bank select register
 

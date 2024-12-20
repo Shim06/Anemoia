@@ -43,3 +43,15 @@ void Mapper::loadRAM(const std::string& path)
 void Mapper::dumpRAM(const std::string& path)
 {
 }
+
+void Mapper::loadState(const std::vector<uint8_t>& dump)
+{
+}
+
+std::vector<uint8_t>& Mapper::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	return dump;
+}

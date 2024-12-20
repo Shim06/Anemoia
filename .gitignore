@@ -3,8 +3,9 @@
 *.state
 *.fb
 *.rar
+*.json
 system/games
-system/settings.json
+screenshots/
 .vs/
 
 

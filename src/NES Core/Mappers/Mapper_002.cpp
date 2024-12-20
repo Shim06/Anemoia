@@ -66,3 +66,23 @@ void Mapper_002::reset()
 	ptr_PRG_bank_low = 0x00;
 	ptr_PRG_bank_high = number_PRG_banks - 1;
 }
+
+void Mapper_002::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	ptr_PRG_bank_low = dump[index++];
+	ptr_PRG_bank_high = dump[index++];
+	return;
+}
+
+std::vector<uint8_t>& Mapper_002::dumpState()
+{
+
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(ptr_PRG_bank_low);
+	dump.push_back(ptr_PRG_bank_high);
+	return dump;
+}

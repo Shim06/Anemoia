@@ -16,11 +16,13 @@ enum keys
 	KEY_FAST_FORWARD,
 	KEY_TOGGLE_FAST_FORWARD,
 	KEY_SCREENSHOT,
-	KEY_SHOW_UI,
+	KEY_TOGGLE_UI,
 	KEY_PAUSE,
 	KEY_MUTE,
 	KEY_TOGGLE_FULLSCREEN,
-	KEY_RESET
+	KEY_RESET,
+	KEY_QUICK_SAVE_STATE,
+	KEY_QUICK_LOAD_STATE
 };
 
 struct controls
@@ -42,9 +44,11 @@ struct hotkeys
 	int reset = 0;
 	int toggle_fullscreen = 0;
 	int screenshot = 0;
-	int show_UI = 0;
+	int toggle_UI = 0;
 	int pause = 0;
 	int mute = 0;
+	int quick_save_state = 0;
+	int quick_load_state = 0;
 };
 
 std::unordered_map<SDL_KeyCode, std::string> keyboard_keybinds =

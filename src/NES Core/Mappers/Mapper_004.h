@@ -18,13 +18,15 @@ public:
 	void scanline() override;
 
 	void reset() override;
+	void loadState(const std::vector<uint8_t>& dump) override;
+	std::vector<uint8_t>& dumpState() override;
 
 private:
 	uint8_t mirror = 0;
 	uint8_t bank_select = 0x00; // Bank select register
 	uint8_t bank_data = 0x00; // Bank data register
-	uint16_t IRQ_latch = 0x0000; // IRQ latch register
-	uint16_t IRQ_counter = 0x0000;
+	uint8_t IRQ_latch = 0x00; // IRQ latch register
+	uint8_t IRQ_counter = 0x00;
 	bool IRQ_enable = false; // IRQ enable/disable register
 	bool IRQ = false;
 
@@ -34,5 +36,6 @@ private:
 	uint8_t ptr_PRG_bank_8KB[4];
 	uint8_t ptr_CHR_bank_1KB[8];
 
+	static constexpr size_t RAM_size = 8 * 1024; // 8KB RAM
 	std::vector<uint8_t> mapper_RAM;
 };

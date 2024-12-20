@@ -1,5 +1,4 @@
 #include "Mapper_206.h"
-#include <iostream>
 
 Mapper_206::Mapper_206(uint8_t PRGBanks, uint8_t CHRBanks) : Mapper(PRGBanks, CHRBanks)
 {
@@ -133,4 +132,36 @@ void Mapper_206::reset()
 	memset(ptr_CHR_bank_2KB, 0, sizeof(ptr_CHR_bank_2KB));
 
 	ptr_PRG_bank_16KB = number_PRG_banks - 1;
+}
+
+void Mapper_206::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+	
+	bank_select = dump[index++];
+	ptr_PRG_bank_16KB = dump[index++];
+
+	for (uint8_t i = 0; i < 2; i++)
+		ptr_PRG_bank_8KB[i] = dump[index++];
+
+	for (uint8_t i = 0; i < 4; i++)
+		ptr_CHR_bank_1KB[i] = dump[index++];
+
+	for (uint8_t i = 0; i < 2; i++)
+		ptr_CHR_bank_2KB[i] = dump[index++];
+
+	return;
+}
+
+std::vector<uint8_t>& Mapper_206::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(bank_select);
+	dump.push_back(ptr_PRG_bank_16KB);
+	dump.insert(dump.end(), ptr_PRG_bank_8KB, ptr_PRG_bank_8KB + 2);
+	dump.insert(dump.end(), ptr_CHR_bank_1KB, ptr_CHR_bank_1KB + 4);
+	dump.insert(dump.end(), ptr_CHR_bank_2KB, ptr_CHR_bank_2KB + 2);
+	return dump;
 }

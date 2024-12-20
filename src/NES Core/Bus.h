@@ -23,13 +23,14 @@ public:
 	// Controllers
 	uint8_t controller[2];
 
-public:
 	void cpuWrite(uint16_t addr, uint8_t data);
 	uint8_t cpuRead(uint16_t addr);
 
 	void insertCartridge(const std::shared_ptr<Cartridge>& cartridge);
 	void reset();
+	void resetClock();
 	void clock();
+
 
 private:
 	uint32_t system_clock_counter = 0;

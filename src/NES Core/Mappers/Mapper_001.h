@@ -1,6 +1,5 @@
 #pragma once
 #include "Mapper.h"
-#include <vector>
 #include <fstream>
 
 class Mapper_001 : public Mapper
@@ -17,6 +16,8 @@ public:
 
 	void loadRAM(const std::string& path) override;
 	void dumpRAM(const std::string& path) override;
+	void loadState(const std::vector<uint8_t>& dump) override;
+	std::vector<uint8_t>& dumpState() override;
 
 	void reset() override;
 
@@ -41,5 +42,5 @@ private:
 	uint8_t ptr_CHR_bank_4KB_high = 0x00;
 
 	std::vector<uint8_t> mapper_RAM;
-	int RAM_size = 32 * 1024; // 8KB RAM
+	int RAM_size = 32 * 1024; // 32KB RAM
 };

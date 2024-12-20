@@ -32,7 +32,6 @@ ppu2C02::ppu2C02()
 
 	// Initialize variables
 	memset(name_table, 0, sizeof(name_table));
-	memset(pattern_table, 0, sizeof(pattern_table));
 	memset(palette_table, 0, sizeof(palette_table));
 	memset(OAM, 0, sizeof(OAM));
 	memset(scanline_sprites, 0, sizeof(scanline_sprites));
@@ -420,7 +419,7 @@ void ppu2C02::clock()
 			OAM_entry = 0;
 			while (OAM_entry < 64 && sprite_count < 9)
 			{
-				int16_t diff = ((int16_t)scanline - (int16_t)OAM[OAM_entry].y);
+				diff = ((int16_t)scanline - (int16_t)OAM[OAM_entry].y);
 				if (diff >= 0 && diff < (control.sprite_size ? 16 : 8))
 				{
 					if (sprite_count < 8)
@@ -536,14 +535,14 @@ void ppu2C02::clock()
 	{
 		if (mask.show_background_left || cycle >= 9)
 		{
-			uint16_t bit_mux = 0x8000 >> fine_x;
+			bit_mux = 0x8000 >> fine_x;
 
-			uint8_t bg_pixel_lsb = (bg_shifter_lsb & bit_mux) > 0;
-			uint8_t bg_pixel_msb = (bg_shifter_msb & bit_mux) > 0;
+			bg_pixel_lsb = (bg_shifter_lsb & bit_mux) > 0;
+			bg_pixel_msb = (bg_shifter_msb & bit_mux) > 0;
 			bg_pixel = (bg_pixel_msb << 1) | bg_pixel_lsb;
 
-			uint8_t bg_palette_lsb = (bg_shifter_attr_lsb & bit_mux) > 0;
-			uint8_t bg_palette_msb = (bg_shifter_attr_msb & bit_mux) > 0;
+			bg_palette_lsb = (bg_shifter_attr_lsb & bit_mux) > 0;
+			bg_palette_msb = (bg_shifter_attr_msb & bit_mux) > 0;
 			bg_palette = (bg_palette_msb << 1) | bg_palette_lsb;
 		}
 	}
@@ -562,8 +561,8 @@ void ppu2C02::clock()
 				if (scanline_sprites[i].x == 0)
 				{
 
-					uint8_t pixel_lsb = (sprite_shifter_lsb[i] & 0x80) > 0;
-					uint8_t pixel_msb = (sprite_shifter_msb[i] & 0x80) > 0;
+					pixel_lsb = (sprite_shifter_lsb[i] & 0x80) > 0;
+					pixel_msb = (sprite_shifter_msb[i] & 0x80) > 0;
 					sprite_pixel = (pixel_msb << 1) | pixel_lsb;
 
 					sprite_palette = (scanline_sprites[i].attribute & 0x03) + 0x04;
@@ -647,9 +646,34 @@ void ppu2C02::clock()
 
 	if (mask.show_background || mask.show_sprites)
 	{
+		// When using 8x8 sprites, if the BG uses $0000, and the sprites use $1000, 
+		// the IRQ counter should decrement on PPU cycle 260.
 		if (cycle == 260 && scanline < 240)
 			cart->getMapper()->scanline();
+
+		/*
+		if (!control.sprite_size && cycle == 260 && scanline < 240)
+		{
+			if (control.background_table_addr == 0 && control.sprite_table_addr == 1)
+				cart->getMapper()->scanline();
+		}
+
+		// When using 8x8 sprites, if the BG uses $1000, and the sprites use $0000,
+		// the IRQ counter should decrement on PPU cycle 324 of the previous scanline
+		if (!control.sprite_size && cycle == 324 && scanline < 240)
+		{
+			if (control.background_table_addr == 1 && control.sprite_table_addr == 0)
+				cart->getMapper()->scanline();
+		}
+
+		if (control.sprite_size && sprite_count < 8 && scanline < 240)
+		{
+			if (control.background_table_addr == 0 && control.sprite_table_addr == 0)
+				cart->getMapper()->scanline();
+		}
+		*/
 	}
+
 	if (cycle >= 341)
 	{
 		cycle = 0;
@@ -688,6 +712,165 @@ void ppu2C02::reset()
 	cached_color_address = 0;
 
 	memset(frame_buffer.get(), 0, 256 * 240 * 3);
+}
+
+std::vector<uint16_t>& ppu2C02::dumpState()
+{
+	static std::vector<uint16_t> dump;
+	dump.clear();
+
+	dump.push_back(nmi);                          
+	dump.push_back(cycle);
+	dump.push_back(scanline);
+	dump.push_back(odd_frame);
+	dump.push_back(frame_complete);
+	dump.push_back(addr_latch);
+	dump.push_back(ppu_data_buffer);
+	dump.push_back(status.reg);
+	dump.push_back(mask.reg);
+	dump.push_back(control.reg);
+	dump.push_back(vram_addr.reg);
+	dump.push_back(temp_vram_addr.reg);
+	dump.push_back(fine_x);
+	dump.push_back(write_toggle);
+	dump.push_back(bg_tile_id);
+	dump.push_back(bg_tile_attr);
+	dump.push_back(bg_tile_lsb);
+	dump.push_back(bg_tile_msb);
+	dump.push_back(bg_shifter_attr_lsb);
+	dump.push_back(bg_shifter_attr_msb);
+	dump.push_back(sprite_count);
+	dump.push_back(sprite_zero);
+	dump.push_back(rendering_sprite_zero);
+	dump.push_back(cached_color_address);
+	dump.push_back(OAM_addr);
+	dump.push_back(OAM_entry);
+	dump.push_back(sprite_bits_lsb);
+	dump.push_back(sprite_bits_msb);
+	dump.push_back(sprite_addr_lsb);
+	dump.push_back(sprite_addr_msb);
+	dump.push_back(bg_pixel);
+	dump.push_back(bg_palette);
+	dump.push_back(sprite_pixel);
+	dump.push_back(sprite_palette);
+	dump.push_back(pixel);
+	dump.push_back(palette);
+	dump.push_back(sprite_priority);
+	dump.push_back(diff);
+	dump.push_back(bit_mux);
+	dump.push_back(bg_pixel_lsb);
+	dump.push_back(bg_pixel_msb);
+	dump.push_back(bg_palette_lsb);
+	dump.push_back(bg_palette_msb);
+	dump.push_back(pixel_lsb);
+	dump.push_back(pixel_msb);
+
+	dump.insert(dump.end(), palette_table, palette_table + 32);
+	dump.insert(dump.end(), sprite_shifter_lsb, sprite_shifter_lsb + 8);
+	dump.insert(dump.end(), sprite_shifter_msb, sprite_shifter_msb + 8);
+
+	for (uint16_t i = 0; i < 2; i++)
+		dump.insert(dump.end(), name_table[i], name_table[i] + 1024);
+
+	for (int i = 0; i < 64; i++) {
+		dump.push_back(OAM[i].y);
+		dump.push_back(OAM[i].id);
+		dump.push_back(OAM[i].attribute); 
+		dump.push_back(OAM[i].x);
+	}
+
+	for (int i = 0; i < 8; i++) {
+		dump.push_back(scanline_sprites[i].y);
+		dump.push_back(scanline_sprites[i].id);
+		dump.push_back(scanline_sprites[i].attribute);
+		dump.push_back(scanline_sprites[i].x);
+	}
+
+	return dump;
+}
+
+void ppu2C02::loadState(const std::vector<uint16_t>& dump)
+{
+	memset(frame_buffer.get(), 0, 256 * 240 * 3);
+	size_t index = 0;
+
+	nmi = static_cast<bool>(dump[index++]);
+	cycle = static_cast<int16_t>(dump[index++]);
+	scanline = static_cast<int16_t>(dump[index++]);
+	odd_frame = static_cast<bool>(dump[index++]);
+	frame_complete = static_cast<bool>(dump[index++]);
+	addr_latch = static_cast<uint8_t>(dump[index++]);
+	ppu_data_buffer = static_cast<uint8_t>(dump[index++]);
+	status.reg = static_cast<uint8_t>(dump[index++]);
+	mask.reg = static_cast<uint8_t>(dump[index++]);
+	control.reg = static_cast<uint8_t>(dump[index++]);
+	vram_addr.reg = dump[index++];
+	temp_vram_addr.reg = dump[index++];
+	fine_x = static_cast<uint8_t>(dump[index++]);
+	write_toggle = static_cast<uint8_t>(dump[index++]);
+	bg_tile_id = static_cast<uint8_t>(dump[index++]);
+	bg_tile_attr = static_cast<uint8_t>(dump[index++]);
+	bg_tile_lsb = static_cast<uint8_t>(dump[index++]);
+	bg_tile_msb = static_cast<uint8_t>(dump[index++]);
+	bg_shifter_attr_lsb = static_cast<uint8_t>(dump[index++]);
+	bg_shifter_attr_msb = static_cast<uint8_t>(dump[index++]);
+	sprite_count = static_cast<uint8_t>(dump[index++]);
+	sprite_zero = static_cast<bool>(dump[index++]);;
+	rendering_sprite_zero = static_cast<bool>(dump[index++]);
+	cached_color_address = dump[index++];
+	OAM_addr = static_cast<uint8_t>(dump[index++]);
+	OAM_entry = static_cast<uint8_t>(dump[index++]);
+	sprite_bits_lsb = static_cast<uint8_t>(dump[index++]);
+	sprite_bits_msb = static_cast<uint8_t>(dump[index++]);
+	sprite_addr_lsb = dump[index++];
+	sprite_addr_msb = dump[index++];
+	bg_pixel = static_cast<uint8_t>(dump[index++]);
+	bg_palette = static_cast<uint8_t>(dump[index++]);
+	sprite_pixel = static_cast<uint8_t>(dump[index++]);
+	sprite_palette = static_cast<uint8_t>(dump[index++]);
+	pixel = static_cast<uint8_t>(dump[index++]);
+	palette = static_cast<uint8_t>(dump[index++]);
+	sprite_priority = static_cast<bool>(dump[index++]);
+	diff = static_cast<int16_t>(dump[index++]);
+	bit_mux = dump[index++];
+	bg_pixel_lsb = static_cast<uint8_t>(dump[index++]);
+	bg_pixel_msb = static_cast<uint8_t>(dump[index++]);
+	bg_palette_lsb = static_cast<uint8_t>(dump[index++]);
+	bg_palette_msb = static_cast<uint8_t>(dump[index++]);
+	pixel_lsb = static_cast<uint8_t>(dump[index++]);
+	pixel_msb = static_cast<uint8_t>(dump[index++]);
+
+	for (uint16_t i = 0; i < 32; i++)
+		palette_table[i] = static_cast<uint8_t>(dump[index++]);
+
+	for (uint16_t i = 0; i < 8; i++)
+		sprite_shifter_lsb[i] = static_cast<uint8_t>(dump[index++]);
+
+	for (uint16_t i = 0; i < 8; i++)
+		sprite_shifter_msb[i] = static_cast<uint8_t>(dump[index++]);
+
+	for (uint16_t i = 0; i < 2; i++)
+	{
+		for (uint16_t j = 0; j < 1024; j++)
+		{
+			name_table[i][j] = static_cast<uint8_t>(dump[index++]);
+		}
+	}
+
+	for (int i = 0; i < 64; i++) {
+		OAM[i].y = static_cast<uint8_t>(dump[index++]);
+		OAM[i].id = static_cast<uint8_t>(dump[index++]);
+		OAM[i].attribute = static_cast<uint8_t>(dump[index++]);
+		OAM[i].x = static_cast<uint8_t>(dump[index++]);
+	}
+
+	for (int i = 0; i < 8; i++) {
+		scanline_sprites[i].y = static_cast<uint8_t>(dump[index++]);
+		scanline_sprites[i].id = static_cast<uint8_t>(dump[index++]);
+		scanline_sprites[i].attribute = static_cast<uint8_t>(dump[index++]);
+		scanline_sprites[i].x = static_cast<uint8_t>(dump[index++]);
+	}
+	return;
 }
 
 void ppu2C02::ConnectCartridge(const std::shared_ptr<Cartridge>& cartridge)

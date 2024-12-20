@@ -15,18 +15,18 @@ public:
 
 	void ConnectCartridge(const std::shared_ptr<Cartridge>& cartridge);
 	void clock();
-	bool nmi = false;
+	void reset();
+
+	std::vector<uint16_t>& dumpState();
+	void loadState(const std::vector<uint16_t>& dump);
 
 	uint8_t cpuRead(uint16_t addr);
 	void cpuWrite(uint16_t addr, uint8_t data);
 	uint8_t ppuRead(uint16_t addr);
 	void ppuWrite(uint16_t addr, uint8_t data);
 	
-	void reset();
-
 	std::shared_ptr<Cartridge> cart;
 	uint8_t name_table[2][1024]; // VRAM
-	uint8_t pattern_table[2][4096];
 	uint8_t palette_table[32]; // PPU Color palletes
 	std::unique_ptr<uint8_t[]> frame_buffer = std::make_unique<uint8_t[]>(256 * 240 * 3); // Frame buffer
 
@@ -40,6 +40,7 @@ public:
 
 	int16_t cycle = 0;
 	int16_t scanline = 0;
+	bool nmi = false;
 	bool odd_frame = false;
 	bool frame_complete = false;
 
@@ -74,7 +75,6 @@ private:
 			uint8_t emphasize_green : 1;
 			uint8_t emphasize_blue : 1;
 		};
-
 		uint8_t reg = 0x00;
 	} mask;
 
@@ -91,7 +91,6 @@ private:
 			uint8_t PPU_master : 1;
 			uint8_t generate_NMI : 1;
 		};
-
 		uint8_t reg = 0x00;
 	} control;
 
@@ -129,7 +128,7 @@ private:
 		uint8_t y;
 		uint8_t id;
 		uint8_t attribute;
-		uint8_t x;
+		uint8_t x;	
 	};
 	
 	sprite OAM[64];
@@ -143,14 +142,6 @@ private:
 
 	uint16_t cached_color_address = 0;
 
-	struct pixel
-	{
-		int16_t x = 0;
-		int16_t y = 0;
-		color RGB;
-	};
-	pixel screen; // NES screen
-
 	uint8_t OAM_addr = 0x00;
 	uint8_t OAM_entry = 0;
 
@@ -163,6 +154,16 @@ private:
 	uint8_t pixel = 0x00;
 	uint8_t palette = 0x00;
 	bool sprite_priority = 0;
+
+	int16_t diff = 0;
+	uint16_t bit_mux = 0;
+	uint8_t bg_pixel_lsb = 0;
+	uint8_t bg_pixel_msb = 0;
+	uint8_t bg_palette_lsb = 0;
+	uint8_t bg_palette_msb = 0;
+
+	uint8_t pixel_lsb = 0;
+	uint8_t pixel_msb = 0;
 
 public:
 	uint8_t* ptr_OAM = (uint8_t*)OAM;

@@ -13,6 +13,8 @@ public:
 	bool ppuMapWrite(uint16_t addr, uint32_t& mapped_addr) override;
 
 	void reset() override;
+	void loadState(const std::vector<uint8_t>& dump) override;
+	std::vector<uint8_t>& dumpState() override;
 
 private:
 	uint8_t ptr_PRG_bank_low = 0x00;

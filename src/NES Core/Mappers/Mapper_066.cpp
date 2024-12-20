@@ -52,3 +52,22 @@ void Mapper_066::reset()
 	ptr_PRG_bank = 0x00;
 	ptr_CHR_bank = 0x00;
 }
+
+void Mapper_066::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	ptr_PRG_bank = dump[index++];
+	ptr_CHR_bank = dump[index++];
+	return;
+}
+
+std::vector<uint8_t>& Mapper_066::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(ptr_PRG_bank);
+	dump.push_back(ptr_CHR_bank);
+	return dump;
+}

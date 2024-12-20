@@ -186,6 +186,27 @@ void Cartridge::getMirrorMode()
 		mirror = mirror_mode - 1;
 }
 
+std::vector<uint8_t>& Cartridge::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.insert(dump.end(), PRG_memory.begin(), PRG_memory.end());
+	dump.insert(dump.end(), CHR_memory.begin(), CHR_memory.end());
+	return dump;
+}
+
+void Cartridge::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	for (size_t i = 0, size = PRG_memory.size(); i < size; i++)
+		PRG_memory[i] = dump[index++];
+
+	for (size_t i = 0, size = CHR_memory.size(); i < size; i++)
+		CHR_memory[i] = dump[index++];
+}
+
 std::shared_ptr<Mapper> Cartridge::getMapper()
 {
 	if (ptr_mapper != NULL)

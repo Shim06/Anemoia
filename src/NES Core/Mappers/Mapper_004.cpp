@@ -2,7 +2,7 @@
 
 Mapper_004::Mapper_004(uint8_t PRGBanks, uint8_t CHRBanks) : Mapper(PRGBanks, CHRBanks)
 {
-	mapper_RAM.resize(8 * 1024);
+	mapper_RAM.resize(RAM_size);
 	memset(ptr_PRG_bank_8KB, 0, sizeof(ptr_PRG_bank_8KB));
 	memset(ptr_CHR_bank_1KB, 0, sizeof(ptr_CHR_bank_1KB));
 	memset(ptr_bank_register, 0, sizeof(ptr_bank_register));
@@ -222,8 +222,6 @@ void Mapper_004::scanline()
 			IRQ = true;
 		}
 	}
-
-
 }
 
 void Mapper_004::reset()
@@ -242,4 +240,55 @@ void Mapper_004::reset()
 
 	ptr_PRG_bank_8KB[2] = (number_PRG_banks * 2) - 2;
 	ptr_PRG_bank_8KB[3] = (number_PRG_banks * 2) - 1;
+}
+
+void Mapper_004::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	mirror = dump[index++];
+	bank_select = dump[index++];
+	bank_data = dump[index++];
+	IRQ_latch = dump[index++];
+	IRQ_counter = dump[index++];
+	IRQ_enable = dump[index++];
+	IRQ = dump[index++];
+	PRG_ROM_bank_mode = dump[index++];
+	CHR_ROM_bank_mode = dump[index++];
+
+	for (uint8_t i = 0; i < 8; i++)
+		ptr_bank_register[i] = dump[index++];
+
+	for (uint8_t i = 0; i < 4; i++)
+		ptr_PRG_bank_8KB[i] = dump[index++];
+
+	for (uint8_t i = 0; i < 8; i++)
+		ptr_CHR_bank_1KB[i] = dump[index++];
+
+	for (size_t i = 0; i < RAM_size; i++)
+		mapper_RAM[i] = dump[index++];
+
+	return;
+}
+
+std::vector<uint8_t>& Mapper_004::dumpState()
+{
+	// TODO: insert return statement here
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(mirror);
+	dump.push_back(bank_select);
+	dump.push_back(bank_data);
+	dump.push_back(IRQ_latch);
+	dump.push_back(IRQ_counter);
+	dump.push_back(IRQ_enable);
+	dump.push_back(IRQ);
+	dump.push_back(PRG_ROM_bank_mode);
+	dump.push_back(CHR_ROM_bank_mode);
+	dump.insert(dump.end(), ptr_bank_register, ptr_bank_register + 8);
+	dump.insert(dump.end(), ptr_PRG_bank_8KB, ptr_PRG_bank_8KB + 4);
+	dump.insert(dump.end(), ptr_CHR_bank_1KB, ptr_CHR_bank_1KB + 8);
+	dump.insert(dump.end(), mapper_RAM.begin(), mapper_RAM.end());
+	return dump;
 }

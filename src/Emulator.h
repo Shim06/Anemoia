@@ -39,12 +39,12 @@ public:
 	uint8_t controller2 = 0x00;
 	uint8_t* ptr_frame_buffer = nullptr;
 
+	void emulate();
 	int start(const std::string& file_name, SDL_Renderer*& renderer);
 	void stop();
 	void reset();
 	void pause();
 	void unpause();
-	void emulate();
 	void fastForward();
 	void normalSpeed();
 	void toggleMute();
@@ -63,6 +63,8 @@ public:
 
 	void loadSave(const std::string& path);
 	void dumpSave(const std::string& path);
+	bool loadState(const std::string& path, const std::string& CRC32);
+	bool saveState(const std::string& path, const std::string& CRC32);
 
 	int getElapsedTime();
 	double getAvgFPS();

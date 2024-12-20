@@ -105,6 +105,45 @@ void cpu6502::SetFlag(FLAGS f, bool v)
 		status &= ~f;
 }
 
+std::vector<uint16_t>& cpu6502::dumpState()
+{
+	static std::vector<uint16_t> dump;
+	dump.clear();
+
+	dump.push_back(A);
+	dump.push_back(X);
+	dump.push_back(Y);
+	dump.push_back(PC);
+	dump.push_back(SP);
+	dump.push_back(status);
+	dump.push_back(fetched);
+	dump.push_back(addr_abs);
+	dump.push_back(addr_rel);
+	dump.push_back(opcode);
+	dump.push_back(cycles);
+	dump.push_back(temp);
+	return dump;
+}
+
+void cpu6502::loadState(const std::vector<uint16_t>& dump)
+{
+	size_t index = 0;
+
+	A = static_cast<uint8_t>(dump[index++]);
+	X = static_cast<uint8_t>(dump[index++]);
+	Y = static_cast<uint8_t>(dump[index++]);
+	PC = dump[index++];
+	SP = static_cast<uint8_t>(dump[index++]);
+	status = static_cast<uint8_t>(dump[index++]);
+	fetched = static_cast<uint8_t>(dump[index++]);
+	addr_abs = dump[index++];
+	addr_rel = dump[index++];
+	opcode = static_cast<uint8_t>(dump[index++]);
+	cycles = static_cast<uint8_t>(dump[index++]);
+	temp = dump[index++];
+	return;
+}
+
 uint8_t cpu6502::ABS()
 {
 	uint16_t low_byte = read(PC);

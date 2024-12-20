@@ -76,3 +76,20 @@ uint8_t Mapper_007::getMirrorMode()
 {
 	return mirror;
 }
+
+void Mapper_007::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+	mirror = dump[index++];
+	ptr_PRG_bank = dump[index++];
+	return;
+}
+
+std::vector<uint8_t>& Mapper_007::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+	dump.push_back(mirror);
+	dump.push_back(ptr_PRG_bank);
+	return dump;
+}

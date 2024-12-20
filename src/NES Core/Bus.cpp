@@ -78,6 +78,12 @@ void Bus::reset()
 	next_cpu_clock = 0;
 }
 
+void Bus::resetClock()
+{
+	system_clock_counter = 0;
+	next_cpu_clock = 0;
+}
+
 void Bus::clock()
 {
 	ppu.clock();

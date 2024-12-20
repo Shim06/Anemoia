@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <vector>
 
 enum MIRROR
 {
@@ -30,6 +31,8 @@ public:
 	virtual void cpuCycle();
 	virtual void loadRAM(const std::string& path);
 	virtual void dumpRAM(const std::string& path);
+	virtual void loadState(const std::vector<uint8_t>& dump);
+	virtual std::vector<uint8_t>& dumpState();
 
 protected:
 

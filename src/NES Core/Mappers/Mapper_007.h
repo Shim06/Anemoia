@@ -15,6 +15,9 @@ public:
 	void reset() override;
 	uint8_t getMirrorMode() override;
 
+	void loadState(const std::vector<uint8_t>& dump) override;
+	std::vector<uint8_t>& dumpState() override;
+
 private:
 	uint8_t mirror = ONESCREEN_LOW;
 	uint8_t ptr_PRG_bank = 0x00;

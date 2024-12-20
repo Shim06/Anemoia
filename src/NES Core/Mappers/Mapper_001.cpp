@@ -210,6 +210,54 @@ void Mapper_001::dumpRAM(const std::string& path)
 	}
 }
 
+void Mapper_001::loadState(const std::vector<uint8_t>& dump)
+{
+	size_t index = 0;
+
+	mirror = dump[index++];
+	load = dump[index++];
+	control = dump[index++];
+	CHR_bank_0 = dump[index++];
+	CHR_bank_1 = dump[index++];
+	PRG_bank = dump[index++];
+	load_writes = dump[index++];
+	PRG_ROM_bank_mode = dump[index++];
+	CHR_ROM_bank_mode = dump[index++];
+	ptr_PRG_bank_32KB = dump[index++];
+	ptr_PRG_bank_16KB_low = dump[index++];
+	ptr_PRG_bank_16KB_high = dump[index++];	
+	ptr_CHR_bank_8KB = dump[index++];
+	ptr_CHR_bank_4KB_low = dump[index++];
+	ptr_CHR_bank_4KB_high = dump[index++];
+	for (size_t i = 0, size = mapper_RAM.size(); i < size; i++)
+		mapper_RAM[i] = dump[index++];
+	return;
+}
+
+std::vector<uint8_t>& Mapper_001::dumpState()
+{
+	static std::vector<uint8_t> dump;
+	dump.clear();
+
+	dump.push_back(mirror);
+	dump.push_back(load);
+	dump.push_back(control);
+	dump.push_back(CHR_bank_0);
+	dump.push_back(CHR_bank_1);
+	dump.push_back(PRG_bank);
+	dump.push_back(load_writes);
+	dump.push_back(PRG_ROM_bank_mode);
+	dump.push_back(CHR_ROM_bank_mode);
+	dump.push_back(ptr_PRG_bank_32KB);
+	dump.push_back(ptr_PRG_bank_16KB_low);
+	dump.push_back(ptr_PRG_bank_16KB_high);
+	dump.push_back(ptr_CHR_bank_8KB);
+	dump.push_back(ptr_CHR_bank_4KB_low);
+	dump.push_back(ptr_CHR_bank_4KB_high);
+	dump.insert(dump.end(), mapper_RAM.begin(), mapper_RAM.end());
+	return dump;
+}
+
 void Mapper_001::reset()
 {
 	mirror = 0;

@@ -41,6 +41,9 @@ public:
 	bool isValidMapper();
 	void reset();
 	void getMirrorMode();
+	std::vector<uint8_t>& dumpState();
+	void loadState(const std::vector<uint8_t>& dump);
+
 	std::shared_ptr<Mapper> getMapper();
 
 private:

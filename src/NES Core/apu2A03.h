@@ -14,6 +14,7 @@ public:
 	uint8_t cpuRead(uint16_t addr);
 	void clock();
 	void reset();
+	void resetChannels();
 
 	void toggleMute();
 	void setVolume(uint8_t volume);
