@@ -1,7 +1,10 @@
 *.nes
-system/games
 *.sav
+*.state
 *.fb
+*.rar
+system/games
+system/settings.json
 .vs/
 
 
