@@ -10,7 +10,7 @@
   Anemoia is a modern Nintendo Entertainment System (NES) emulator, written in C++.
   It aims to provide a performant and modern-looking emulator while ensuring a user-friendly experience for users.  
   This emulator is inspired by the open-source Nintendo Switch emulator, Ryujinx.
-  Anemoia is available on Github under the <a href="https://github.com/Ryujinx/Ryujinx/blob/master/LICENSE.txt" target="_blank">MIT license</a>.
+  Anemoia is available on Github under the <a href="https://github.com/Shim06/Anemoia/blob/main/LICENSE" target="_blank">MIT license</a>.
   <br/>
 </p>
 
