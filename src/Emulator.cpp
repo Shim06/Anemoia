@@ -26,7 +26,7 @@ void Emulator::emulate()
             // to prevent audio popping from closing and opening audio channel
             if (SDL_GetQueuedAudioSize(dev) < 512)
             {
-                static constexpr int data[512] = { 0 };
+                static constexpr int data[512] = { 1 };
                 SDL_QueueAudio(dev, data, 512);
             }
 
@@ -96,7 +96,7 @@ bool Emulator::init_audio()
 {
     // Initialize want
     want.freq = 44100;
-    want.format = AUDIO_U8;
+    want.format = AUDIO_S8;
     want.channels = 1;
     want.samples = 512;
 
@@ -267,11 +267,11 @@ bool Emulator::loadState(const std::string& path, const std::string& CRC32)
 
 bool Emulator::saveState(const std::string& path, const std::string& CRC32)
 {
-    std::cout << "YO1";
     std::ofstream save_state(path, std::ios::binary | std::ios::trunc);
     if (!save_state) return false;
 
-    // Write "ANEMOIA" and game CRC32 hash to file header 
+    // Write "ANEMOIA" and game CRC32 hash to file header
+    // For file verification when loading save states
     const char* text = "ANEMOIA";
     const char* hash = CRC32.c_str();
     save_state.write(text, strlen(text));
@@ -287,8 +287,6 @@ bool Emulator::saveState(const std::string& path, const std::string& CRC32)
     size_t ppu_dump_size = ppu_dump.size();
     size_t cart_dump_size = cart_dump.size();
     size_t mapper_dump_size = mapper_dump.size();
-
-    std::cout << "YO";
 
     save_state.write(reinterpret_cast<char*>(&cpu_dump_size), sizeof(cpu_dump_size));
     save_state.write(reinterpret_cast<char*>(&ppu_dump_size), sizeof(ppu_dump_size));
