@@ -13,6 +13,15 @@ int main(int, char**)
         return 1;
     }
 
+    char exePath[MAX_PATH];
+    GetModuleFileNameA(NULL, exePath, MAX_PATH);
+    char* lastSlash = strrchr(exePath, '\\');
+    if (lastSlash) {
+        *lastSlash = '\0';
+        SetCurrentDirectoryA(exePath);
+    }
+    else return 1;
+
     // Ensure necessary folders exist
     ensureFolderPathExists(current_directory + "games");
     ensureFolderPathExists(current_directory + "saves");
