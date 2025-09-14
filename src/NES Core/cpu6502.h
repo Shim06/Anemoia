@@ -3,6 +3,10 @@
 #include <string>
 #include <vector>
 
+#define GET_FLAG(f) ((status & (f)) != 0)
+#define SET_FLAG(f, v) (status = ((status & ~(f)) | ((-(int)(v)) & (f))))
+#define SET_ZN(v) (status = ((status & ~(Z | N)) | zn_table[(v)]))
+
 class Bus;
 
 class cpu6502
@@ -14,7 +18,7 @@ public:
 	// Status Register Flags
 	enum FLAGS
 	{
-		C = (1 << 0), // Carry Bit
+	    C = (1 << 0), // Carry Bit
 		Z = (1 << 1), // Zero Bit
 		I = (1 << 2), // Interrupt Bit
 		D = (1 << 3), // Decimal Bit
@@ -37,6 +41,8 @@ public:
 	uint8_t status = 0x00; // Status register
 
 private: 
+	static const uint8_t zn_table[256];
+
 	// Addressing Modes
 	uint8_t ABS();	uint8_t IDX();
 	uint8_t ABX();	uint8_t IDY();
@@ -92,7 +98,7 @@ private:
 		uint8_t(cpu6502::* instruction)(void) = nullptr;
 		uint8_t(cpu6502::* addrmode)(void) = nullptr;
 		uint8_t cycles = 0;
-	};
+	};	
 
 	std::vector<OPCODE> lookup;
 };
