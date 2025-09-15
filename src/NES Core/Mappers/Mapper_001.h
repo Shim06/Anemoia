@@ -35,11 +35,9 @@ private:
 	uint8_t PRG_ROM_bank_mode = 0;
 	uint8_t CHR_ROM_bank_mode = 0;
 	uint8_t ptr_PRG_bank_32KB = 0x00;
-	uint8_t ptr_PRG_bank_16KB_low = 0x00;
-	uint8_t ptr_PRG_bank_16KB_high = 0x00;
+	uint8_t ptr_PRG_bank_16KB[2] = { 0x00, 0x00 };
 	uint8_t ptr_CHR_bank_8KB = 0x00;
-	uint8_t ptr_CHR_bank_4KB_low = 0x00;
-	uint8_t ptr_CHR_bank_4KB_high = 0x00;
+	uint8_t ptr_CHR_bank_4KB[2] = {0x00, 0x00};
 
 	std::vector<uint8_t> mapper_RAM;
 	int RAM_size = 32 * 1024; // 32KB RAM
